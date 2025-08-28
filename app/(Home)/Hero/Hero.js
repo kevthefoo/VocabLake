@@ -15,7 +15,18 @@ const Hero = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [ispopup, setIspopup] = useState(false);
 
-    const handleSearch = () => {};
+    const handleSearch = async () => {
+        const response = await fetch(`/api/chatgpt`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ vocabulary: query }),
+        });
+        const data = await response.json();
+        console.log(data);
+    };
+
     const handleOverlayClick = () => {};
     if (!isLoaded) {
         return (
