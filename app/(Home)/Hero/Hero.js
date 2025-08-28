@@ -28,7 +28,7 @@ const Hero = () => {
     const clerkUserId = user?.id;
 
     return (
-        <section className="border-4 border-red-400 h-screen flex flex-col justify-center items-center">
+        <section className="border-4 border-red-400 h-full flex flex-col justify-center items-center">
             {/* {result && (
                 <div className="mb-8 p-4 bg-white rounded shadow max-w-md w-full">
                     <div className="mb-2 flex items-center justify-between">

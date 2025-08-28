@@ -24,12 +24,12 @@ export default function RootLayout({ children }) {
         <ClerkProvider>
             <html lang="en">
                 <body
-                    className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                    className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen flex flex-col`}
                 >
-                    <header className="flex fixed border-4 border-black w-full justify-around h-16 items-center">
+                    <header className="flex border-4 border-black w-full justify-around h-16 items-center">
                         <Navbar />
                     </header>
-                    <main>{children}</main>
+                    <main className="h-full  ">{children}</main>
                 </body>
             </html>
         </ClerkProvider>
