@@ -7,11 +7,12 @@ import { Input } from "@/components/ui/input";
 import { useUser, SignIn } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { Star } from "lucide-react";
+import { supabase } from "@/lib/supabaseClient";
 
 const Hero = () => {
     const { user, isSignedIn, isLoaded } = useUser();
     const [query, setQuery] = useState("");
-    const [result, setResult] = useState("");
+    const [vocabData, setVocabData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [ispopup, setIspopup] = useState(false);
 
@@ -24,7 +25,41 @@ const Hero = () => {
             body: JSON.stringify({ vocabulary: query }),
         });
         const data = await response.json();
-        console.log(data);
+        const result = data.result;
+
+        setVocabData({
+            vocabulary: result.vocabulary,
+            meaning: result.meaning,
+            examples: result.example,
+        });
+
+        console.log({
+            vocabulary: result.vocabulary,
+            meaning: result.meaning,
+            examples: result.example,
+        });
+    };
+
+    //     {
+    //     "vocabulary": "price",
+    //     "meaning": "the amount of money expected, required, or given in payment for something",
+    //     "example": [
+    //         "What is the price of this book?",
+    //         "They raised the price of gasoline.",
+    //         "We got a good price on our new car."
+    //     ]
+    // }
+
+    const addVocab = async () => {
+        const response = await supabase
+            .from("Vocab")
+            .insert({
+                vocabulary: "Mordor",
+                meaning: "Hoodie",
+                created_by: "Kevin",
+            });
+
+        console.log(response.status);
     };
 
     const handleOverlayClick = () => {};
@@ -40,11 +75,11 @@ const Hero = () => {
 
     return (
         <section className="border-4 border-red-400 h-full flex flex-col justify-center items-center">
-            {/* {result && (
+            {vocabData && (
                 <div className="mb-8 p-4 bg-white rounded shadow max-w-md w-full">
                     <div className="mb-2 flex items-center justify-between">
                         <h2 className="text-lg font-semibold">
-                            {result.vocabulary}
+                            {vocabData.vocabulary}
                         </h2>
                         <Star
                             className="cursor-pointer"
@@ -53,12 +88,16 @@ const Hero = () => {
                         />
                     </div>
 
-                    <p className="mb-2">{result.meaning}</p>
+                    <p className="mb-2">{vocabData.meaning}</p>
                     <ul className="flex flex-col gap-2 p-4">
-                        display some result
+                        {vocabData.examples.map((ex, index) => (
+                            <li key={index} className="list-disc">
+                                <p>{ex}</p>
+                            </li>
+                        ))}
                     </ul>
                 </div>
-            )} */}
+            )}
             <div className="w-36 space-y-4 ">
                 <Input
                     type="text"

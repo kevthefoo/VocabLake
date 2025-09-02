@@ -3,7 +3,7 @@ import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
 
-export async function POST(req, res) {
+export async function POST(req) {
     const body = await req.json();
     const queryVocab = body.vocabulary;
 
