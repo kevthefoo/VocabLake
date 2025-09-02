@@ -51,15 +51,18 @@ const Hero = () => {
     // }
 
     const addVocab = async () => {
-        const response = await supabase
-            .from("Vocab")
-            .insert({
-                vocabulary: "Mordor",
-                meaning: "Hoodie",
-                created_by: "Kevin",
-            });
+        const term = "Apple";
+        const meaning = "A kind of frunit";
+        const notes = "";
+        const uid = "5f3b9c1c-2a8e-4c9a-9c37-3e16c22e4d61";
 
-        console.log(response.status);
+        const response = await supabase
+            .from("words")
+            .insert([{ user_id: uid, term, meaning, notes }])
+            .select("id")
+            .single();
+
+        console.log(response.error);
     };
 
     const handleOverlayClick = () => {};
