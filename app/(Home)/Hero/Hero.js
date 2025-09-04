@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useUser, SignIn } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { Star } from "lucide-react";
-import { supabase } from "@/lib/supabaseClient";
+import supabase from "@/lib/supabaseClient";
 
 const Hero = () => {
     const { user, isSignedIn, isLoaded } = useUser();
