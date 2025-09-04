@@ -40,19 +40,10 @@ const Hero = () => {
         });
     };
 
-    //     {
-    //     "vocabulary": "price",
-    //     "meaning": "the amount of money expected, required, or given in payment for something",
-    //     "example": [
-    //         "What is the price of this book?",
-    //         "They raised the price of gasoline.",
-    //         "We got a good price on our new car."
-    //     ]
-    // }
-
     const addVocab = async () => {
-        const term = "Apple";
-        const meaning = "A kind of frunit";
+        const term = vocabData.vocabulary;
+        const meaning = vocabData.meaning;
+        const examples = vocabData.examples;
         const notes = "";
         const uid = "5f3b9c1c-2a8e-4c9a-9c37-3e16c22e4d61";
 
@@ -62,7 +53,12 @@ const Hero = () => {
             .select("id")
             .single();
 
-        console.log(response.error);
+        console.log(response);
+        const word_id = response.data.id;
+
+        const responsee = await supabase
+            .from("examples")
+            .insert([{ word_id: word_id, sentence: examples }]);
     };
 
     const handleOverlayClick = () => {};
@@ -112,7 +108,7 @@ const Hero = () => {
                 <Button
                     onClick={handleSearch}
                     disabled={isLoading}
-                    className="w-full"
+                    className="w-full cursor-pointer"
                 >
                     {isLoading ? "Searching..." : "Search"}
                 </Button>
