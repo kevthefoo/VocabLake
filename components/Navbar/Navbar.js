@@ -19,6 +19,9 @@ const Navbar = () => {
                     <li>
                         <Link href="/pricing">Pricing</Link>
                     </li>
+                    <li>
+                        <Link href="/test">Testing</Link>
+                    </li>
                 </ul>
             </nav>
             <div className=" flex justify-center items-center">
