@@ -14,7 +14,7 @@ const Page = () => {
     }, []);
 
     if (vocabCount === null) {
-        return null;
+        return <div>Loading...</div>;
     }
 
     return (

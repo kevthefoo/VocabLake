@@ -29,13 +29,15 @@ const Navbar = () => {
                         <Link href="/dashboard">Dashboard</Link>
                     </li>
                     <li>
+                        <Link href="/review">Review</Link>
+                    </li>
+                    <li>
                         <Link href="/pricing">Pricing</Link>
                     </li>
                     <li>
                         <Link href="/test">Testing</Link>
                     </li>
                 </ul>
-                {/* <div>{user.id}</div> */}
             </nav>
             <div className=" flex justify-center items-center">
                 <SignedOut>
