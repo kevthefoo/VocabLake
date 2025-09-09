@@ -12,7 +12,7 @@ import Link from "next/link";
 
 const Navbar = () => {
     const { user, isLoaded } = useUser();
-    console.log(isLoaded);
+
     if (!isLoaded) {
         return <>Loading...</>;
     }

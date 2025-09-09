@@ -1,7 +1,27 @@
-import React from "react";
+"use client";
 
-const page = () => {
-    return <div>This is dashboard page</div>;
+import { useState, useEffect } from "react";
+import countVocab from "@/lib/countVocab";
+
+const Page = () => {
+    const [vocabCount, setVocabCount] = useState(null);
+    useEffect(() => {
+        const fetchCount = async () => {
+            const count = await countVocab();
+            setVocabCount(count);
+        };
+        fetchCount();
+    }, []);
+
+    if (vocabCount === null) {
+        return null;
+    }
+
+    return (
+        <section className="flex justify-center items-center h-full">
+            You have {vocabCount} Vocabs in your lake
+        </section>
+    );
 };
 
-export default page;
+export default Page;
