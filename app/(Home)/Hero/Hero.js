@@ -8,6 +8,7 @@ import { useUser, SignIn } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { Star } from "lucide-react";
 import supabase from "@/lib/supabaseClient";
+import addVocab from "@/lib/addVocab";
 
 const Hero = () => {
     const { user, isSignedIn, isLoaded } = useUser();
@@ -15,6 +16,10 @@ const Hero = () => {
     const [vocabData, setVocabData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [ispopup, setIspopup] = useState(false);
+
+    if (!isLoaded) {
+        return <div>Loading...</div>;
+    }
 
     const handleSearch = async () => {
         const response = await fetch(`/api/chatgpt`, {
@@ -40,25 +45,13 @@ const Hero = () => {
         });
     };
 
-    const addVocab = async () => {
+    const addVocabHandler = async () => {
         const term = vocabData.vocabulary;
         const meaning = vocabData.meaning;
         const examples = vocabData.examples;
-        const notes = "";
-        const uid = "5f3b9c1c-2a8e-4c9a-9c37-3e16c22e4d61";
 
-        const response = await supabase
-            .from("words")
-            .insert([{ user_id: uid, term, meaning, notes }])
-            .select("id")
-            .single();
-
+        const response = await addVocab(user.id, term, meaning, examples);
         console.log(response);
-        const word_id = response.data.id;
-
-        const responsee = await supabase
-            .from("examples")
-            .insert([{ word_id: word_id, sentence: examples }]);
     };
 
     const handleOverlayClick = () => {};
@@ -83,7 +76,7 @@ const Hero = () => {
                         <Star
                             className="cursor-pointer"
                             fill="yellow"
-                            onClick={addVocab}
+                            onClick={addVocabHandler}
                         />
                     </div>
 

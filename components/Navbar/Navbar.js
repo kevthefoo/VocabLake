@@ -7,14 +7,14 @@ import {
     UserButton,
     useUser,
 } from "@clerk/nextjs";
-// import { useUser } from "@clerk/clerk-react";
+
 import Link from "next/link";
 
 const Navbar = () => {
     const { user, isLoaded } = useUser();
     console.log(isLoaded);
     if (!isLoaded) {
-        return <>ddd</>;
+        return <>Loading...</>;
     }
 
     return (
