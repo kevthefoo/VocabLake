@@ -3,7 +3,7 @@
 import queryVocab from "@/lib/queryVocab";
 import countVocab from "@/lib/countVocab";
 import randomQuery from "@/lib/randomQuery";
-
+import addUser from "@/lib/addUser";
 import React from "react";
 
 const page = () => {
@@ -18,6 +18,10 @@ const page = () => {
     };
     const randomQueryHandler = async () => {
         const data = await randomQuery();
+        console.log(data);
+    };
+    const addUserHandler = async () => {
+        const data = await addUser();
         console.log(data);
     };
     return (
@@ -39,6 +43,12 @@ const page = () => {
                 onClick={randomQueryHandler}
             >
                 Random
+            </div>
+            <div
+                className="cursor-pointer p-2 border-2 border-black"
+                onClick={addUserHandler}
+            >
+                Add new user
             </div>
         </div>
     );
