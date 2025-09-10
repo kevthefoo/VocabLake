@@ -43,8 +43,7 @@ const Hero = () => {
     const term = vocabData.vocabulary;
     const descriptions = vocabData.descriptions;
 
-    const response = await addVocab(user_id, term, descriptions);
-    console.log(response);
+    await addVocab(user_id, term, descriptions);
   };
 
   const playPronunceHandler = async () => {
@@ -62,7 +61,7 @@ const Hero = () => {
   }
 
   return (
-    <section className="flex h-full flex-col items-center justify-center border-4 border-red-400">
+    <section className="flex h-full flex-col items-center justify-center">
       {vocabData && (
         <div className="mb-8 w-full max-w-md rounded bg-white p-4 shadow">
           <div className="mb-2 flex items-center justify-between">

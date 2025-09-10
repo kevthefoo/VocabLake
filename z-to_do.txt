@@ -2,3 +2,23 @@
 disable search and review before sign in/sign up
 add vocab duplicate error
 user interactive effect
+
+
+
+Dashboard:
+total vocabs count
+vocabs in the lake count
+export to excel
+monthly learning
+
+Recommend by ai agent:
+    Number of vocabs added today/this week/this month
+    Number of vocabs reviewed
+    Number of vocabs mastered (e.g., marked as learned/starred)
+    Number of vocabs pending review
+    Most recently added vocab
+    Most difficult vocab (e.g., most failed reviews)
+    Review streak (days in a row you’ve reviewed)
+    Total number of users (if multi-user)
+    Average number of vocabs added per day
+    Progress chart (e.g., vocabs learned over time)

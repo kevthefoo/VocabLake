@@ -29,7 +29,7 @@ const Page = () => {
     playPronunce(term);
   };
   return (
-    <section className="flex h-full flex-col items-center justify-center border-4 border-red-400">
+    <section className="flex h-full flex-col items-center justify-center">
       <div>
         {vocabData && vocabData[currentIndex] && (
           <div className="mb-8 w-full max-w-md rounded bg-white p-4 shadow">

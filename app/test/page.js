@@ -29,7 +29,7 @@ const page = () => {
     playPronunce("Fuck you");
   };
   return (
-    <div className="flex h-full items-center justify-center gap-1 border-4 border-red-400">
+    <div className="flex h-full items-center justify-center gap-1">
       <div
         className="cursor-pointer border-2 border-black p-2"
         onClick={queryVocabHandler}

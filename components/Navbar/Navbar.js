@@ -18,7 +18,7 @@ const Navbar = () => {
   }
 
   return (
-    <>
+    <div className="flex h-16 w-full items-center justify-around border-b-2 border-black">
       <div>Logo</div>
       <nav>
         <ul className="flex gap-4">
@@ -50,7 +50,7 @@ const Navbar = () => {
           ></UserButton>
         </SignedIn>
       </div>
-    </>
+    </div>
   );
 };
 
