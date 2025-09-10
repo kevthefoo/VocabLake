@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useUser, SignIn } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { Star, Volume2 } from "lucide-react";
-import supabase from "@/lib/supabaseClient";
+
 import addVocab from "@/lib/addVocab";
 import playPronunce from "@/lib/playPronunce";
 const Hero = () => {
@@ -31,26 +31,19 @@ const Hero = () => {
         });
         const data = await response.json();
         const result = data.result;
-
+        console.log(result);
         setVocabData({
             vocabulary: result.vocabulary,
-            meaning: result.meaning,
-            examples: result.example,
-        });
-
-        console.log({
-            vocabulary: result.vocabulary,
-            meaning: result.meaning,
-            examples: result.example,
+            descriptions: result.descriptions,
         });
     };
 
     const addVocabHandler = async () => {
+        const user_id = user.id;
         const term = vocabData.vocabulary;
-        const meaning = vocabData.meaning;
-        const examples = vocabData.examples;
+        const descriptions = vocabData.descriptions;
 
-        const response = await addVocab(user.id, term, meaning, examples);
+        const response = await addVocab(user_id, term, descriptions);
         console.log(response);
     };
 
@@ -67,8 +60,6 @@ const Hero = () => {
             </div>
         );
     }
-
-    const clerkUserId = user?.id;
 
     return (
         <section className="border-4 border-red-400 h-full flex flex-col justify-center items-center">
@@ -94,10 +85,11 @@ const Hero = () => {
                     </div>
 
                     <p className="mb-2">{vocabData.meaning}</p>
-                    <ul className="flex flex-col gap-2 p-4">
-                        {vocabData.examples.map((ex, index) => (
+                    <ul className="flex flex-col gap-8 p-4">
+                        {vocabData.descriptions.map((des, index) => (
                             <li key={index} className="list-disc">
-                                <p>{ex}</p>
+                                <p className="font-semibold">{des.meaning}</p>
+                                <i>{des.example}</i>
                             </li>
                         ))}
                     </ul>

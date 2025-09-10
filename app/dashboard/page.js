@@ -14,7 +14,11 @@ const Page = () => {
     }, []);
 
     if (vocabCount === null) {
-        return <div>Loading...</div>;
+        return (
+            <section className="flex justify-center items-center h-full">
+                Loading...
+            </section>
+        );
     }
 
     return (

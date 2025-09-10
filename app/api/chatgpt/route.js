@@ -13,8 +13,12 @@ export async function POST(req) {
 
     const vocabData = z.object({
         vocabulary: z.string(),
-        meaning: z.string(),
-        example: z.array(z.string()),
+        descriptions: z.array(
+            z.object({
+                meaning: z.string(),
+                example: z.string(),
+            })
+        ),
     });
 
     try {
