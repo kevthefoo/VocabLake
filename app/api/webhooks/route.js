@@ -3,12 +3,12 @@ import addUser from "@/lib/addUser";
 
 // Receive data from Clerk when there is a new user created
 export async function POST(req) {
-    const body = await req.json();
-    const userId = body.data.id;
-    const userEmail = body.data.email_addresses[0].email_address;
-    // Add user data to the supabase
-    const response = await addUser(userId, userEmail);
-    console.log(`${userId} has joined!`)
+  const body = await req.json();
+  const userId = body.data.id;
+  const userEmail = body.data.email_addresses[0].email_address;
+  // Add user data to the supabase
+  const response = await addUser(userId, userEmail);
+  console.log(`${userId} has joined!`);
 
-    return NextResponse.json({ result: "success!" }, { status: 200 });
+  return NextResponse.json({ result: "success!" }, { status: 200 });
 }
