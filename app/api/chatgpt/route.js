@@ -41,7 +41,6 @@ export async function POST(req) {
         });
 
         const parsedVocabData = response.output_parsed;
-        console.log(parsedVocabData);
 
         return NextResponse.json({ result: parsedVocabData }, { status: 200 });
     } catch (error) {
