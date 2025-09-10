@@ -6,10 +6,10 @@ import { Input } from "@/components/ui/input";
 
 import { useUser, SignIn } from "@clerk/nextjs";
 import { toast } from "sonner";
-import { Star } from "lucide-react";
+import { Star, Volume2 } from "lucide-react";
 import supabase from "@/lib/supabaseClient";
 import addVocab from "@/lib/addVocab";
-
+import playPronunce from "@/lib/playPronunce";
 const Hero = () => {
     const { user, isSignedIn, isLoaded } = useUser();
     const [query, setQuery] = useState("");
@@ -54,6 +54,11 @@ const Hero = () => {
         console.log(response);
     };
 
+    const playPronunceHandler = async () => {
+        const term = vocabData.vocabulary;
+        playPronunce(term);
+    };
+
     const handleOverlayClick = () => {};
     if (!isLoaded) {
         return (
@@ -69,10 +74,18 @@ const Hero = () => {
         <section className="border-4 border-red-400 h-full flex flex-col justify-center items-center">
             {vocabData && (
                 <div className="mb-8 p-4 bg-white rounded shadow max-w-md w-full">
-                    <div className="mb-2 flex items-center justify-between">
-                        <h2 className="text-lg font-semibold">
-                            {vocabData.vocabulary}
-                        </h2>
+                    <div className="mb-2 flex items-center justify-between ">
+                        <div className="flex justify-center items-center gap-2">
+                            <h2 className="text-lg font-semibold">
+                                {vocabData.vocabulary}
+                            </h2>
+
+                            <Volume2
+                                className="cursor-pointer"
+                                onClick={playPronunceHandler}
+                            />
+                        </div>
+
                         <Star
                             className="cursor-pointer"
                             fill="yellow"
