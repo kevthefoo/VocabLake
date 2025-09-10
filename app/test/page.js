@@ -4,7 +4,7 @@ import queryVocab from "@/lib/queryVocab";
 import countVocab from "@/lib/countVocab";
 import randomQuery from "@/lib/randomQuery";
 import addUser from "@/lib/addUser";
-import React from "react";
+import playPronunce from "@/lib/playPronunce";
 
 const page = () => {
     const queryVocabHandler = async () => {
@@ -23,6 +23,10 @@ const page = () => {
     const addUserHandler = async () => {
         const data = await addUser();
         console.log(data);
+    };
+
+    const playPronunceHandler = async () => {
+        playPronunce("Fuck you");
     };
     return (
         <div className="flex h-full justify-center items-center border-4 border-red-400 gap-1">
@@ -49,6 +53,12 @@ const page = () => {
                 onClick={addUserHandler}
             >
                 Add new user
+            </div>
+            <div
+                className="cursor-pointer p-2 border-2 border-black"
+                onClick={playPronunceHandler}
+            >
+                Play Pronunciation
             </div>
         </div>
     );
