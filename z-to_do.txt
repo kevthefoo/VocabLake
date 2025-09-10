@@ -1,1 +1,4 @@
-User Auth in supabase
+
+disable search and review before sign in/sign up
+add vocab duplicate error
+user interactive effect
