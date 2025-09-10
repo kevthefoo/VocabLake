@@ -34,6 +34,7 @@ export default function RootLayout({ children }) {
         <body
           className={`${geistSans.variable} ${geistMono.variable} flex h-screen flex-col antialiased`}
         >
+          <Toaster richColors />
           <header className="flex h-16 w-full items-center justify-around border-4 border-black">
             <Navbar />
           </header>
