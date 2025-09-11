@@ -41,7 +41,7 @@ const Navbar = () => {
       </nav>
       <div className="flex items-center justify-center">
         <SignedOut>
-          <SignInButton mode="modal" />
+          <SignInButton mode="modal" className="cursor-pointer" />
         </SignedOut>
         <SignedIn>
           <UserButton
