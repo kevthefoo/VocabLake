@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { useUser, SignIn, SignInButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-import { useUser, SignIn } from "@clerk/nextjs";
-import { toast } from "sonner";
 import { Star, Volume2 } from "lucide-react";
+import { toast } from "sonner";
 
 import addVocab from "@/lib/addVocab";
 import playPronunce from "@/lib/playPronunce";
+
 const Hero = () => {
   const { user, isSignedIn, isLoaded } = useUser();
   const [query, setQuery] = useState("");
@@ -22,6 +22,9 @@ const Hero = () => {
   }
 
   const handleSearch = async () => {
+    if (!isSignedIn) {
+      toast.error("xxxxxxxxxx");
+    }
     const response = await fetch(`/api/chatgpt`, {
       method: "POST",
       headers: {
@@ -100,13 +103,19 @@ const Hero = () => {
           onChange={(e) => setQuery(e.target.value)}
           className="w-full"
         />
-        <Button
-          onClick={handleSearch}
-          disabled={isLoading}
-          className="w-full cursor-pointer"
-        >
-          {isLoading ? "Searching..." : "Search"}
-        </Button>
+        {isSignedIn ? (
+          <Button
+            onClick={handleSearch}
+            disabled={isLoading}
+            className="w-full cursor-pointer"
+          >
+            {isLoading ? "Searching..." : "Search"}
+          </Button>
+        ) : (
+          <SignInButton mode="modal">
+            <Button className="w-full cursor-pointer">Search</Button>
+          </SignInButton>
+        )}
       </div>
       <div
         className={

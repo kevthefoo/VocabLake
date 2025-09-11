@@ -2,9 +2,10 @@
 disable search and review before sign in/sign up
 add vocab duplicate error
 user interactive effect
+RLS
+sign out redirect
 
-
-
+----------------------
 Dashboard:
 total vocabs count
 vocabs in the lake count
@@ -22,3 +23,11 @@ Recommend by ai agent:
     Total number of users (if multi-user)
     Average number of vocabs added per day
     Progress chart (e.g., vocabs learned over time)
+
+
+
+Plans:
+
+free-tier:
+
+Paid tier 9.99/month
