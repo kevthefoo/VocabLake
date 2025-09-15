@@ -1,9 +1,9 @@
-import React from "react";
+import { PricingTable } from "@clerk/nextjs";
 
 const page = () => {
   return (
     <section className="flex h-full items-center justify-center">
-      This is pricing page
+      <PricingTable />
     </section>
   );
 };
