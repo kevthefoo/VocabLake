@@ -1,8 +1,6 @@
 
 
 user interactive effect
-sign out redirectRLS
-
 
 ----------------------
 Dashboard:
