@@ -6,7 +6,7 @@ import {
   UserButton,
   isLoaded,
 } from "@clerk/nextjs";
-
+import { neobrutalism } from "@clerk/themes";
 import Navbar from "@/components/Navbar/Navbar";
 import { Toaster } from "sonner";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -29,7 +29,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider afterSignOutUrl="/">
+    <ClerkProvider
+      afterSignOutUrl="/"
+      appearance={{
+        baseTheme: neobrutalism,
+      }}
+    >
       <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} flex h-screen flex-col antialiased`}
