@@ -1,5 +1,6 @@
 
 chart with shadcn
+free plan usage
 
 vacab tags(IETLS, toeic...)
 

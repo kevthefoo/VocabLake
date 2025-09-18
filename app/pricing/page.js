@@ -1,6 +1,14 @@
+import { auth } from "@clerk/nextjs/server";
+
 import { PricingTable } from "@clerk/nextjs";
 import { neobrutalism } from "@clerk/themes";
-const page = () => {
+const page = async () => {
+  const { has } = await auth();
+
+  const hasStandardPlan = has({ plan: "free_user" });
+
+  console.log(hasStandardPlan);
+
   return (
     <section className="flex h-full items-center justify-center">
       <div className="flex h-full w-1/2 flex-col items-center justify-center border-2 border-red-400">
