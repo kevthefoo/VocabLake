@@ -64,68 +64,141 @@ const Hero = () => {
   }
 
   return (
-    <section className="flex h-full flex-col items-center justify-center">
-      {vocabData && (
-        <div className="mb-8 w-full max-w-md rounded bg-white p-4 shadow">
-          <div className="mb-2 flex items-center justify-between">
-            <div className="flex items-center justify-center gap-2">
-              <h2 className="text-lg font-semibold">{vocabData.vocabulary}</h2>
-
-              <Volume2
-                className="cursor-pointer"
-                onClick={playPronunceHandler}
-              />
-            </div>
-
-            <Star
-              className="cursor-pointer"
-              fill="yellow"
-              onClick={addVocabHandler}
-            />
-          </div>
-
-          <p className="mb-2">{vocabData.meaning}</p>
-          <ul className="flex flex-col gap-8 p-4">
-            {vocabData.descriptions.map((des, index) => (
-              <li key={index} className="list-disc">
-                <p className="font-semibold">{des.meaning}</p>
-                <i>{des.example}</i>
-              </li>
-            ))}
-          </ul>
+    <section className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-8">
+      <div className="mx-auto max-w-7xl">
+        {/* Hero Header */}
+        <div className="mx-auto mb-12 max-w-4xl text-center">
+          <h1 className="mb-6 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
+            Discover New
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              {" "}
+              Vocabulary
+            </span>
+          </h1>
+          <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600 md:text-xl">
+            Expand your vocabulary with AI-powered definitions, examples, and
+            pronunciation guides
+          </p>
         </div>
-      )}
-      <div className="w-36 space-y-4">
-        <Input
-          type="text"
-          placeholder="Enter a vocabulary"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="w-full"
-        />
-        {isSignedIn ? (
-          <Button
-            onClick={handleSearch}
-            disabled={isLoading}
-            className="w-full cursor-pointer"
-          >
-            {isLoading ? "Searching..." : "Search"}
-          </Button>
-        ) : (
-          <SignInButton mode="modal">
-            <Button className="w-full cursor-pointer">Search</Button>
-          </SignInButton>
-        )}
+
+        {/* Main Content Container */}
+        <div className="mx-auto flex max-w-5xl flex-col items-center justify-center">
+          {/* Vocabulary Result Card */}
+          {vocabData && (
+            <div className="mx-auto mb-12 w-full max-w-3xl">
+              <div className="mx-auto max-w-2xl rounded-2xl bg-white p-6 shadow-2xl md:p-8 lg:p-10">
+                {/* Header with word and actions */}
+                <div className="mb-6 flex max-w-full flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+                  <div className="flex max-w-lg flex-1 items-center gap-3">
+                    <h2 className="max-w-sm text-2xl font-bold text-gray-900 md:text-3xl lg:text-4xl">
+                      {vocabData.vocabulary}
+                    </h2>
+                    <button
+                      onClick={playPronunceHandler}
+                      className="max-w-fit flex-shrink-0 rounded-full bg-blue-100 p-2 transition-colors duration-200 hover:bg-blue-200"
+                      aria-label="Play pronunciation"
+                    >
+                      <Volume2 className="h-5 w-5 text-blue-600" />
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={addVocabHandler}
+                    className="flex max-w-fit items-center gap-2 rounded-lg bg-yellow-100 px-4 py-2 transition-colors duration-200 hover:bg-yellow-200"
+                    aria-label="Add to favorites"
+                  >
+                    <Star
+                      className="h-5 w-5 text-yellow-600"
+                      fill="currentColor"
+                    />
+                    <span className="text-sm font-medium text-yellow-700">
+                      Add to Lake
+                    </span>
+                  </button>
+                </div>
+
+                {/* Definitions */}
+                <div className="max-w-full space-y-6">
+                  {vocabData.descriptions.map((des, index) => (
+                    <div
+                      key={index}
+                      className="max-w-full border-l-4 border-blue-500 pl-6"
+                    >
+                      <p className="mb-3 max-w-prose text-lg font-semibold text-gray-800 md:text-xl">
+                        {des.meaning}
+                      </p>
+                      <p className="max-w-prose text-base leading-relaxed text-gray-600 italic md:text-lg">
+                        &ldquo;{des.example}&rdquo;
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Search Section */}
+          <div className="mx-auto w-full max-w-xl">
+            <div className="mx-auto max-w-lg rounded-2xl bg-white p-6 shadow-xl md:p-8">
+              <div className="space-y-6">
+                <div className="max-w-full">
+                  <label
+                    htmlFor="vocabulary-input"
+                    className="mb-2 block max-w-xs text-sm font-medium text-gray-700"
+                  >
+                    Enter a word to explore
+                  </label>
+                  <Input
+                    id="vocabulary-input"
+                    type="text"
+                    placeholder="e.g., serendipity, ephemeral..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    className="w-full max-w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-lg transition-colors duration-200 focus:border-blue-500 focus:ring-blue-500"
+                    onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                  />
+                </div>
+
+                {isSignedIn ? (
+                  <Button
+                    onClick={handleSearch}
+                    disabled={isLoading || !query.trim()}
+                    className="w-full max-w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-lg font-semibold text-white transition-all duration-200 hover:from-blue-700 hover:to-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {isLoading ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white"></div>
+                        Searching...
+                      </div>
+                    ) : (
+                      "🔍 Explore Word"
+                    )}
+                  </Button>
+                ) : (
+                  <SignInButton mode="modal">
+                    <Button className="w-full max-w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-lg font-semibold text-white transition-all duration-200 hover:from-blue-700 hover:to-indigo-700">
+                      🔍 Sign In to Explore
+                    </Button>
+                  </SignInButton>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* Sign In Modal Overlay */}
       <div
         className={
           ispopup
-            ? `bg-opacity-85 fixed z-10 flex h-screen w-full items-center justify-center bg-gray-600`
+            ? `fixed inset-0 z-50 flex max-h-full max-w-full items-center justify-center bg-black/50 backdrop-blur-sm`
             : `hidden`
         }
         onClick={handleOverlayClick}
       >
-        <SignIn routing="hash" />
+        <div className="max-h-screen max-w-md overflow-auto">
+          <SignIn routing="hash" />
+        </div>
       </div>
     </section>
   );
