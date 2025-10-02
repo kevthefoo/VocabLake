@@ -9,6 +9,7 @@ import { toast } from "sonner";
 
 import addVocab from "@/lib/addVocab";
 import playPronunce from "@/lib/playPronunce";
+import { validateVocabularyInput } from "@/lib/inputValidator";
 
 const Hero = () => {
   const { user, isSignedIn, isLoaded } = useUser();
@@ -16,6 +17,7 @@ const Hero = () => {
   const [vocabData, setVocabData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [ispopup, setIspopup] = useState(false);
+  const [inputError, setInputError] = useState("");
 
   if (!isLoaded) {
     return <div>Loading...</div>;
@@ -23,22 +25,72 @@ const Hero = () => {
 
   const handleSearch = async () => {
     if (!isSignedIn) {
-      toast.error("xxxxxxxxxx");
+      toast.error("Please sign in to search for vocabulary");
+      return;
     }
-    const response = await fetch(`/api/chatgpt`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ vocabulary: query }),
-    });
-    const data = await response.json();
-    const result = data.result;
-    console.log(result);
-    setVocabData({
-      vocabulary: result.vocabulary,
-      descriptions: result.descriptions,
-    });
+
+    // Validate input before processing
+    const validation = validateVocabularyInput(query);
+
+    if (!validation.isValid) {
+      const errorMessage = validation.errors.join(". ");
+      toast.error(`Invalid input: ${errorMessage}`);
+
+      // Show suggestion if available
+      if (validation.suggestions.length > 0) {
+        setTimeout(() => {
+          toast.info(validation.suggestions[0]);
+        }, 1000);
+      }
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`/api/chatgpt`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ vocabulary: validation.cleanedInput || query }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch vocabulary data");
+      }
+
+      const data = await response.json();
+      const result = data.result;
+
+      console.log(result);
+      setVocabData({
+        vocabulary: result.vocabulary,
+        descriptions: result.descriptions,
+      });
+    } catch (error) {
+      console.error("Search error:", error);
+      toast.error("Failed to search vocabulary. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+
+    // Real-time validation feedback
+    if (value.trim()) {
+      const validation = validateVocabularyInput(value);
+      if (!validation.isValid) {
+        setInputError(validation.errors[0] || "Invalid input");
+      } else {
+        setInputError("");
+      }
+    } else {
+      setInputError("");
+    }
   };
 
   const addVocabHandler = async () => {
@@ -67,19 +119,21 @@ const Hero = () => {
     <section className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-8">
       <div className="mx-auto max-w-7xl">
         {/* Hero Header */}
-        <div className="mx-auto mb-12 max-w-4xl text-center">
-          <h1 className="mb-6 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
-            Discover New
-            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              {" "}
-              Vocabulary
-            </span>
-          </h1>
-          <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600 md:text-xl">
-            Expand your vocabulary with AI-powered definitions, examples, and
-            pronunciation guides
-          </p>
-        </div>
+
+        {!vocabData && (
+          <div className="mx-auto mb-12 max-w-4xl text-center">
+            <h1 className="mb-6 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
+              Discover New
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                Vocabulary
+              </span>
+            </h1>
+            <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600 md:text-xl">
+              Expand your vocabulary with AI-powered definitions, examples, and
+              pronunciation guides
+            </p>
+          </div>
+        )}
 
         {/* Main Content Container */}
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-center">
@@ -153,10 +207,19 @@ const Hero = () => {
                     type="text"
                     placeholder="e.g., serendipity, ephemeral..."
                     value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    className="w-full max-w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-lg transition-colors duration-200 focus:border-blue-500 focus:ring-blue-500"
+                    onChange={handleInputChange}
+                    className={`w-full max-w-full rounded-xl border-2 px-4 py-3 text-lg transition-colors duration-200 focus:ring-blue-500 ${
+                      inputError
+                        ? "border-red-500 focus:border-red-500"
+                        : "border-gray-200 focus:border-blue-500"
+                    }`}
                     onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                   />
+                  {inputError && (
+                    <p className="mt-2 max-w-full text-sm text-red-600">
+                      {inputError}
+                    </p>
+                  )}
                 </div>
 
                 {isSignedIn ? (
