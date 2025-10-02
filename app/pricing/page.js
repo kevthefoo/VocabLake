@@ -10,15 +10,113 @@ const page = async () => {
   console.log(hasStandardPlan);
 
   return (
-    <section className="flex h-full items-center justify-center">
-      <div className="flex h-full w-1/2 flex-col items-center justify-center border-2 border-red-400">
-        <h1 className="mb-4">Choose Your Plan</h1>
-        <PricingTable
-          className="border-2 border-blue-400"
-          appearance={{
-            baseTheme: neobrutalism,
-          }}
-        />
+    <section className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-12">
+      <div className="mx-auto max-w-7xl">
+        {/* Header Section */}
+        <div className="mx-auto mb-16 max-w-3xl text-center">
+          <h1 className="mb-6 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
+            Choose Your
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              Perfect Plan
+            </span>
+          </h1>
+          <p className="mx-auto max-w-2xl text-lg leading-relaxed text-gray-600 md:text-xl">
+            Unlock the full potential of your vocabulary learning journey with
+            our flexible pricing plans designed for every learner.
+          </p>
+        </div>
+
+        {/* Pricing Table Container */}
+        <div className="mx-auto max-w-5xl">
+          <div className="mx-auto max-w-4xl rounded-2xl bg-white p-6 shadow-2xl md:p-8 lg:p-12">
+            <PricingTable
+              className="w-full max-w-full"
+              appearance={{
+                baseTheme: neobrutalism,
+                elements: {
+                  card: "max-w-sm mx-auto",
+                  cardBox: "max-w-sm",
+                  planName: "max-w-full text-center",
+                  planDescription: "max-w-full text-center",
+                  planPrice: "max-w-full text-center",
+                  planFeatures: "max-w-full",
+                  planButton: "max-w-full w-full",
+                },
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Features Section */}
+        <div className="mx-auto mt-20 max-w-6xl">
+          <div className="mb-12 text-center">
+            <h2 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl">
+              Why Choose VocabLake?
+            </h2>
+            <p className="mx-auto max-w-2xl text-lg text-gray-600">
+              Experience the most comprehensive vocabulary learning platform
+            </p>
+          </div>
+
+          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {/* Feature 1 */}
+            <div className="mx-auto w-full max-w-sm rounded-xl bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+                <span className="text-2xl">🌊</span>
+              </div>
+              <h3 className="mb-2 text-center text-xl font-semibold text-gray-900">
+                Interactive Lake
+              </h3>
+              <p className="mx-auto max-w-xs text-center text-gray-600">
+                Watch your vocabulary grow in our beautiful animated lake
+                ecosystem
+              </p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="mx-auto w-full max-w-sm rounded-xl bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
+                <span className="text-2xl">📊</span>
+              </div>
+              <h3 className="mb-2 text-center text-xl font-semibold text-gray-900">
+                Progress Tracking
+              </h3>
+              <p className="mx-auto max-w-xs text-center text-gray-600">
+                Monitor your learning journey with detailed analytics and
+                insights
+              </p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="mx-auto w-full max-w-sm rounded-xl bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl md:col-span-2 lg:col-span-1">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
+                <span className="text-2xl">🎯</span>
+              </div>
+              <h3 className="mb-2 text-center text-xl font-semibold text-gray-900">
+                Smart Review
+              </h3>
+              <p className="mx-auto max-w-xs text-center text-gray-600">
+                AI-powered spaced repetition for optimal vocabulary retention
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA Section */}
+        <div className="mx-auto mt-20 max-w-4xl text-center">
+          <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white md:p-12">
+            <h2 className="mx-auto mb-4 max-w-2xl text-3xl font-bold md:text-4xl">
+              Ready to Dive Into Your Learning Journey?
+            </h2>
+            <p className="mx-auto mb-8 max-w-xl text-xl opacity-90">
+              Join thousands of learners who have transformed their vocabulary
+              with VocabLake
+            </p>
+            <button className="w-full max-w-xs rounded-xl bg-white px-8 py-4 text-lg font-semibold text-blue-600 transition-colors duration-200 hover:bg-gray-50 md:w-auto">
+              Start Free Trial
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   );

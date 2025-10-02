@@ -46,3 +46,5 @@ Paid tier 9.99/month
 8 ---> 6 month
 
 9 ---> to the Lake
+
+Use n8n to post Youtube Video everyday
