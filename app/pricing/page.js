@@ -15,7 +15,7 @@ const page = async () => {
         {/* Header Section */}
         <div className="mx-auto mb-16 max-w-3xl text-center">
           <h1 className="mb-6 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
-            Choose Your
+            Choose Your{" "}
             <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               Perfect Plan
             </span>
@@ -99,22 +99,6 @@ const page = async () => {
                 AI-powered spaced repetition for optimal vocabulary retention
               </p>
             </div>
-          </div>
-        </div>
-
-        {/* CTA Section */}
-        <div className="mx-auto mt-20 max-w-4xl text-center">
-          <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white md:p-12">
-            <h2 className="mx-auto mb-4 max-w-2xl text-3xl font-bold md:text-4xl">
-              Ready to Dive Into Your Learning Journey?
-            </h2>
-            <p className="mx-auto mb-8 max-w-xl text-xl opacity-90">
-              Join thousands of learners who have transformed their vocabulary
-              with VocabLake
-            </p>
-            <button className="w-full max-w-xs rounded-xl bg-white px-8 py-4 text-lg font-semibold text-blue-600 transition-colors duration-200 hover:bg-gray-50 md:w-auto">
-              Start Free Trial
-            </button>
           </div>
         </div>
       </div>

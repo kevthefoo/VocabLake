@@ -8,9 +8,17 @@ import playPronunce from "@/lib/playPronunce";
 const Page = () => {
   const [vocabData, setVocabData] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedCount, setSelectedCount] = useState(5); // Default to 5
+
+  const vocabOptions = [
+    { value: 5, label: "5 Words", description: "Quick review" },
+    { value: 10, label: "10 Words", description: "Standard practice" },
+    { value: 30, label: "30 Words", description: "Extended session" },
+    { value: 100, label: "100 Words", description: "Gimme a brainstorm" },
+  ];
 
   const handleStart = async () => {
-    const data = await randomQuery();
+    const data = await randomQuery(selectedCount); // Pass the selected count
     setVocabData(data);
     setCurrentIndex(0);
   };
@@ -48,9 +56,17 @@ const Page = () => {
         {/* Main Content Container */}
         <div className="mx-auto flex min-h-[60vh] max-w-4xl flex-col items-center justify-center">
           {vocabData && vocabData[currentIndex] && (
-            <div className="mx-auto w-full max-w-3xl">
+            <div className="mx-auto flex w-full max-w-3xl items-center justify-center gap-4">
+              <Button
+                onClick={handlePreviousVocab}
+                disabled={currentIndex === 0}
+                className="flex cursor-pointer items-center justify-center border-0 bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <ArrowBigLeft className="h-5 w-5" />
+              </Button>
+
               {/* Vocabulary Card */}
-              <div className="mx-auto mb-8 max-w-2xl rounded-2xl bg-white p-6 shadow-2xl md:p-8 lg:p-12">
+              <div className="max-w-2xl rounded-2xl bg-white p-6 shadow-2xl md:p-8 lg:p-12">
                 {/* Header with term and pronunciation */}
                 <div className="mx-auto mb-8 max-w-xl text-center">
                   <div className="mb-4 flex items-center justify-center gap-4">
@@ -59,7 +75,7 @@ const Page = () => {
                     </h2>
                     <button
                       onClick={playPronunceHandler}
-                      className="max-w-fit rounded-full bg-blue-100 p-3 transition-colors duration-200 hover:bg-blue-200"
+                      className="max-w-fit cursor-pointer rounded-full bg-blue-100 p-3 transition-colors duration-200 hover:bg-blue-200"
                       aria-label="Play pronunciation"
                     >
                       <Volume2 className="h-6 w-6 text-blue-600" />
@@ -102,96 +118,81 @@ const Page = () => {
                 </div>
               </div>
 
-              {/* Navigation Buttons */}
+              <Button
+                onClick={handleNextVocab}
+                disabled={currentIndex === vocabData.length - 1}
+                className="flex cursor-pointer items-center justify-center border-0 bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <ArrowBigRight className="h-5 w-5" />
+              </Button>
+
+              {/* Navigation Buttons
               <div className="mx-auto flex max-w-md items-center justify-center gap-4">
-                <Button
-                  onClick={handlePreviousVocab}
-                  disabled={currentIndex === 0}
-                  className="max-w-32 flex-1 border-0 bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <ArrowBigLeft className="mr-2 h-5 w-5" />
-                  Previous
-                </Button>
 
-                <div className="max-w-20 rounded-lg bg-white px-4 py-2 text-center shadow-md">
-                  <span className="text-sm font-semibold text-gray-600">
-                    {currentIndex + 1}/{vocabData.length}
-                  </span>
-                </div>
-
-                <Button
-                  onClick={handleNextVocab}
-                  disabled={currentIndex === vocabData.length - 1}
-                  className="max-w-32 flex-1 bg-blue-600 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Next
-                  <ArrowBigRight className="ml-2 h-5 w-5" />
-                </Button>
-              </div>
+              </div> */}
             </div>
           )}
 
-          {/* Start Button - When no vocab data */}
+          {/* Vocabulary Count Selection - When no vocab data */}
           {!vocabData && (
-            <div className="mx-auto max-w-lg text-center">
+            <div className="mx-auto max-w-2xl text-center">
               <div className="rounded-2xl bg-white p-8 shadow-2xl md:p-12">
-                <div className="mb-6">
-                  <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100">
+                <div className="mb-8">
+                  <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100">
                     <span className="text-3xl">📚</span>
                   </div>
-                  <h2 className="mx-auto mb-4 max-w-sm text-2xl font-bold text-gray-900 md:text-3xl">
-                    Ready to Review?
+                  <h2 className="mx-auto mb-4 max-w-lg text-2xl font-bold text-gray-900 md:text-3xl">
+                    Choose Your Review Size
                   </h2>
-                  <p className="mx-auto mb-8 max-w-xs text-gray-600">
-                    Test your knowledge with 5 random vocabulary words from your
-                    collection
+                  <p className="mx-auto mb-8 max-w-md text-gray-600">
+                    Select how many vocabulary words you&apos;d like to review
+                    in this session
                   </p>
                 </div>
 
+                {/* Vocabulary Count Options */}
+                <div className="mx-auto mb-8 grid max-w-lg grid-cols-2 gap-4">
+                  {vocabOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => setSelectedCount(option.value)}
+                      className={`max-w-full cursor-pointer rounded-xl border-2 p-4 text-left transition-all duration-200 hover:shadow-md ${
+                        selectedCount === option.value
+                          ? "border-blue-500 bg-blue-50 shadow-md"
+                          : "border-gray-200 bg-white hover:border-blue-300"
+                      }`}
+                    >
+                      <div className="max-w-full">
+                        <div className="mb-1 text-lg font-semibold text-gray-900">
+                          {option.label}
+                        </div>
+                        <div className="max-w-full text-sm text-gray-600">
+                          {option.description}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Start Button */}
                 <Button
                   onClick={handleStart}
-                  className="mx-auto w-full max-w-xs rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-4 text-lg font-semibold text-white transition-all duration-200 hover:from-blue-700 hover:to-indigo-700"
+                  className="mx-auto w-full max-w-xs cursor-pointer rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-4 text-lg font-semibold text-white transition-all duration-200 hover:from-blue-700 hover:to-indigo-700"
                 >
                   Start Review Session
                 </Button>
+
+                {/* Selected count display */}
+                <p className="mt-4 max-w-full text-sm text-gray-500">
+                  Selected:{" "}
+                  {
+                    vocabOptions.find((opt) => opt.value === selectedCount)
+                      ?.label
+                  }
+                </p>
               </div>
             </div>
           )}
-        </div>
-
-        {/* Tips Section */}
-        <div className="mx-auto mt-16 max-w-4xl">
-          <div className="rounded-2xl bg-white/50 p-6 backdrop-blur-sm md:p-8">
-            <h3 className="mx-auto mb-4 max-w-2xl text-center text-xl font-bold text-gray-900 md:text-2xl">
-              💡 Review Tips
-            </h3>
-            <div className="mx-auto grid max-w-3xl grid-cols-1 gap-6 md:grid-cols-3">
-              <div className="mx-auto max-w-xs text-center">
-                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-                  <span className="text-xl">🎯</span>
-                </div>
-                <p className="text-sm text-gray-600">
-                  Focus on understanding the context of each example
-                </p>
-              </div>
-              <div className="mx-auto max-w-xs text-center">
-                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
-                  <span className="text-xl">🔊</span>
-                </div>
-                <p className="text-sm text-gray-600">
-                  Use the pronunciation feature to improve your speaking
-                </p>
-              </div>
-              <div className="mx-auto max-w-xs text-center">
-                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-                  <span className="text-xl">⚡</span>
-                </div>
-                <p className="text-sm text-gray-600">
-                  Regular review sessions improve long-term retention
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>

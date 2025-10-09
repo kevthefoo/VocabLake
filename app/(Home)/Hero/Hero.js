@@ -4,11 +4,9 @@ import { useState } from "react";
 import { useUser, SignIn, SignInButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Star, Volume2 } from "lucide-react";
+import VocabCard from "@/components/VocabCard/VocabCard";
 import { toast } from "sonner";
 
-import addVocab from "@/lib/addVocab";
-import playPronunce from "@/lib/playPronunce";
 import { validateVocabularyInput } from "@/lib/inputValidator";
 
 const Hero = () => {
@@ -94,19 +92,6 @@ const Hero = () => {
     }
   };
 
-  const addVocabHandler = async () => {
-    const user_id = user.id;
-    const term = vocabData.vocabulary;
-    const descriptions = vocabData.descriptions;
-
-    await addVocab(user_id, term, descriptions);
-  };
-
-  const playPronunceHandler = async () => {
-    const term = vocabData.vocabulary;
-    playPronunce(term);
-  };
-
   const handleOverlayClick = () => {};
   if (!isLoaded) {
     return (
@@ -120,7 +105,6 @@ const Hero = () => {
     <section className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-8">
       <div className="mx-auto max-w-7xl">
         {/* Hero Header */}
-
         {!vocabData && (
           <div className="mx-auto mb-12 max-w-4xl text-center">
             <h1 className="mb-6 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
@@ -188,59 +172,7 @@ const Hero = () => {
             </div>
           )}
 
-          {/* Vocabulary Result Card */}
-          {vocabData && (
-            <div className="mx-auto mb-12 w-full max-w-3xl">
-              <div className="mx-auto max-w-2xl rounded-2xl bg-white p-6 shadow-2xl md:p-8 lg:p-10">
-                {/* Header with word and actions */}
-                <div className="mb-6 flex max-w-full flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-                  <div className="flex max-w-lg flex-1 items-center gap-3">
-                    <h2 className="max-w-sm text-2xl font-bold text-gray-900 md:text-3xl lg:text-4xl">
-                      {vocabData.vocabulary}
-                    </h2>
-                    <button
-                      onClick={playPronunceHandler}
-                      className="max-w-fit flex-shrink-0 cursor-pointer rounded-full bg-blue-100 p-2 transition-colors duration-200 hover:bg-blue-200"
-                      aria-label="Play pronunciation"
-                    >
-                      <Volume2 className="h-5 w-5 text-blue-600" />
-                    </button>
-                  </div>
-
-                  <button
-                    onClick={addVocabHandler}
-                    className="flex max-w-fit cursor-pointer items-center gap-2 rounded-lg bg-yellow-100 px-4 py-2 transition-colors duration-200 hover:bg-yellow-200"
-                    aria-label="Add to favorites"
-                  >
-                    <Star
-                      className="h-5 w-5 text-yellow-600"
-                      fill="currentColor"
-                    />
-                    <span className="text-sm font-medium text-yellow-700">
-                      Add to Lake
-                    </span>
-                  </button>
-                </div>
-
-                {/* Definitions */}
-                <div className="max-w-full space-y-6">
-                  {vocabData.descriptions.map((des, index) => (
-                    <div
-                      key={index}
-                      className="max-w-full border-l-4 border-blue-500 pl-6"
-                    >
-                      <p className="mb-3 max-w-prose text-lg font-semibold text-gray-800 md:text-xl">
-                        {des.meaning}
-                      </p>
-                      <p className="max-w-prose text-base leading-relaxed text-gray-600 italic md:text-lg">
-                        &ldquo;{des.example}&rdquo;
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
+          <VocabCard userData={user} vocabData={vocabData}  />
 
           {/* Search Section - Initial Load (No Vocab Data) */}
           {!vocabData && (
@@ -278,7 +210,7 @@ const Hero = () => {
                     <Button
                       onClick={handleSearch}
                       disabled={isLoading || !query.trim()}
-                      className="cursor-pointer w-full max-w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-lg font-semibold text-white transition-all duration-200 hover:from-blue-700 hover:to-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="w-full max-w-full cursor-pointer rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-lg font-semibold text-white transition-all duration-200 hover:from-blue-700 hover:to-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {isLoading ? (
                         <div className="flex items-center justify-center gap-2">
