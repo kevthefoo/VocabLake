@@ -123,7 +123,7 @@ const Hero = () => {
         {!vocabData && (
           <div className="mx-auto mb-12 max-w-4xl text-center">
             <h1 className="mb-6 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
-              Discover New
+              Discover New{" "}
               <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Vocabulary
               </span>
