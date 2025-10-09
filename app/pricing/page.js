@@ -5,8 +5,8 @@ import { neobrutalism } from "@clerk/themes";
 const page = async () => {
   const { has } = await auth();
 
-  const hasStandardPlan = has({ plan: "free_user" });
-
+  const hasFreePlan = has({ plan: "free_user" });
+  const hasStandardPlan = has({ plan: "std" });
   console.log(hasStandardPlan);
 
   return (
