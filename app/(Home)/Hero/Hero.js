@@ -8,6 +8,7 @@ import VocabCard from "@/components/VocabCard/VocabCard";
 import { toast } from "sonner";
 
 import { validateVocabularyInput } from "@/lib/inputValidator";
+import ImageGallery from "@/components/ImageGallery/ImageGallery";
 
 const Hero = () => {
   const { user, isSignedIn, isLoaded } = useUser();
@@ -16,6 +17,7 @@ const Hero = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [ispopup, setIspopup] = useState(false);
   const [inputError, setInputError] = useState("");
+  const [currentSearchTerm, setCurrentSearchTerm] = useState("");
 
   if (!isLoaded) {
     return <div>Loading...</div>;
@@ -70,6 +72,9 @@ const Hero = () => {
         vocabulary: result.vocabulary,
         descriptions: result.descriptions,
       });
+
+      // Set search term for image gallery
+      setCurrentSearchTerm(validation.cleanedInput || query);
     } catch (error) {
       console.error("Search error:", error);
       toast.error("Failed to search vocabulary. Please try again.");
@@ -177,6 +182,9 @@ const Hero = () => {
           )}
 
           <VocabCard userData={user} vocabData={vocabData} />
+
+          {/* Add Image Gallery */}
+          <ImageGallery searchTerm={currentSearchTerm} vocabData={vocabData} />
 
           {/* Search Section - Initial Load (No Vocab Data) */}
           {!vocabData && (
