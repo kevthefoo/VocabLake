@@ -2,10 +2,51 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
+import dictionaryValidator from "@/lib/dictionaryValidator";
 
 export async function POST(req) {
   const body = await req.json();
   const queryVocab = body.vocabulary;
+
+  // Input validation
+  if (
+    !queryVocab ||
+    typeof queryVocab !== "string" ||
+    queryVocab.trim().length === 0
+  ) {
+    return NextResponse.json(
+      { error: "Please provide a valid vocabulary word" },
+      { status: 400 },
+    );
+  }
+
+  // Step 1: Validate word with Free Dictionary API
+  console.log(`Validating word: ${queryVocab}`);
+  const validation = await dictionaryValidator.validateWord(queryVocab);
+
+  if (!validation.exists) {
+    console.log(`Word validation failed: ${validation.error}`);
+
+    // Return appropriate error based on validation result
+    if (validation.shouldRetry) {
+      return NextResponse.json(
+        {
+          error: "Unable to validate word at the moment. Please try again.",
+          details: validation.error,
+        },
+        { status: 503 }, // Service Unavailable
+      );
+    } else {
+      return NextResponse.json(
+        {
+          error: validation.error || "Word not found in dictionary",
+          suggestion:
+            validation.suggestion || "Please check spelling and try again",
+        },
+        { status: 404 },
+      );
+    }
+  }
 
   const client = new OpenAI({
     apiKey: process.env.OPENAI_SECRET_KEY,

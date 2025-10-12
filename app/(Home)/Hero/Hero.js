@@ -55,7 +55,11 @@ const Hero = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch vocabulary data");
+        const data = await response.json();
+        const result = data;
+        console.log(result.error);
+        toast.error(`${result.error}. ${result.suggestion}`);
+        return;
       }
 
       const data = await response.json();
@@ -172,7 +176,7 @@ const Hero = () => {
             </div>
           )}
 
-          <VocabCard userData={user} vocabData={vocabData}  />
+          <VocabCard userData={user} vocabData={vocabData} />
 
           {/* Search Section - Initial Load (No Vocab Data) */}
           {!vocabData && (
