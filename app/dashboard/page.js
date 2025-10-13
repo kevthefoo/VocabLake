@@ -18,7 +18,11 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
+import { useUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
+
 const Page = () => {
+  const { user, isSignedIn, isLoaded } = useUser();
   const [vocabCount, setVocabCount] = useState(null);
   const [latestVocabs, setLatestVocabs] = useState([]);
 
@@ -41,6 +45,16 @@ const Page = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      // Only fetch if user is loaded AND signed in
+      if (!isLoaded) {
+        return;
+      }
+
+      // Only fetch if user is loaded AND signed in
+      if (!isSignedIn || !user) {
+        redirect("/");
+      }
+
       const count = await countVocab();
       setVocabCount(count);
 

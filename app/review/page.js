@@ -4,11 +4,24 @@ import { Button } from "@/components/ui/button";
 import randomQuery from "@/lib/randomQuery";
 import { ArrowBigLeft, ArrowBigRight, Volume2 } from "lucide-react";
 import playPronunce from "@/lib/playPronunce";
+import { useUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 const Page = () => {
+  const { user, isSignedIn, isLoaded } = useUser();
   const [vocabData, setVocabData] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedCount, setSelectedCount] = useState(5); // Default to 5
+
+  // Only fetch if user is loaded AND signed in
+  if (!isLoaded) {
+    return;
+  }
+
+  // Only fetch if user is loaded AND signed in
+  if (!isSignedIn || !user) {
+    redirect("/");
+  }
 
   const vocabOptions = [
     { value: 5, label: "5 Words", description: "Quick review" },
