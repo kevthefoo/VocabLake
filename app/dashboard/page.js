@@ -44,6 +44,7 @@ const Page = () => {
   };
 
   useEffect(() => {
+    console.log("hiii");
     const fetchData = async () => {
       // Only fetch if user is loaded AND signed in
       if (!isLoaded) {
@@ -68,7 +69,7 @@ const Page = () => {
       ]);
     };
     fetchData();
-  }, []);
+  }, [user, isSignedIn, isLoaded]);
 
   if (vocabCount === null) {
     return (
