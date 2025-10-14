@@ -72,103 +72,227 @@ const Page = () => {
 
   if (vocabCount === null) {
     return (
-      <section className="flex h-full items-center justify-center">
-        <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-blue-500"></div>
+      <section className="flex h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-16 w-16 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+          <p className="text-lg font-medium text-blue-700">
+            Loading your dashboard...
+          </p>
+        </div>
       </section>
     );
   }
 
   return (
-    <section className="flex h-full border-4 border-red-500 bg-gradient-to-b from-blue-100 to-blue-300">
-      {/* Left Section - Stats and Chart */}
-      <div className="flex w-1/2 flex-col gap-6 overflow-y-hidden border-2 border-red-500 p-8">
-        {/* Latest Vocabs Section */}
-        <Card className=" ">
-          <CardHeader>
-            <CardTitle className="text-blue-700">Latest Vocabs</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {latestVocabs.map((vocab, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between rounded-lg bg-blue-50 p-3"
-                >
-                  <span className="font-medium text-blue-800">
-                    {vocab.term}
-                  </span>
-                  <span className="text-sm text-blue-600">
-                    {vocab.created_at}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+    <section className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-6 lg:p-8">
+      <div className="mx-auto max-w-7xl">
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">
+            Welcome back,{" "}
+            <span className="text-blue-600">
+              {user?.firstName || "Learner"}
+            </span>
+            ! 👋
+          </h1>
+          <p className="mt-2 text-gray-600">
+            Here&apos;s your vocabulary learning progress
+          </p>
+        </div>
 
-        {/* Chart Section */}
-        <Card className=" ">
-          <CardHeader>
-            <CardTitle className="text-blue-700">Monthly Progress</CardTitle>
-            <CardDescription>Number of vocabs added each month</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={chartConfig}>
-              <AreaChart
-                accessibilityLayer
-                data={chartData}
-                margin={{
-                  left: 12,
-                  right: 12,
-                }}
-              >
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="month"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                />
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent indicator="line" />}
-                />
-                <Area
-                  dataKey="vocabs"
-                  type="natural"
-                  fill="hsl(var(--color-blue-500))"
-                  fillOpacity={0.4}
-                  stroke="hsl(var(--color-blue-500))"
-                />
-              </AreaChart>
-            </ChartContainer>
-            <div className="mt-4 flex w-full items-start gap-2 text-sm">
-              <div className="grid gap-2">
-                <div className="flex items-center gap-2 leading-none font-medium">
-                  Trending up by 150% this month
-                  <TrendingUp className="h-4 w-4" />
+        {/* Bento Grid Layout */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+          {/* Large Card - Vocab Count (spans 2 columns) */}
+          <Card className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-xl transition-shadow duration-300 hover:shadow-2xl lg:col-span-2">
+            <CardContent className="flex flex-col items-center justify-center p-8 md:p-12">
+              <div className="mb-4 text-7xl md:text-8xl">🌊</div>
+              <div className="text-6xl font-bold md:text-7xl">{vocabCount}</div>
+              <div className="mt-3 text-xl font-medium text-blue-100 md:text-2xl">
+                Vocabs in your lake
+              </div>
+              {vocabCount === 0 && (
+                <p className="mt-4 text-sm text-blue-200">
+                  Start learning to populate your lake!
+                </p>
+              )}
+              {vocabCount > 0 && (
+                <div className="mt-6 flex gap-2">
+                  {vocabCount > 0 && <span className="text-3xl">🐠</span>}
+                  {vocabCount > 5 && <span className="text-3xl">🐟</span>}
+                  {vocabCount > 10 && <span className="text-3xl">🦈</span>}
+                  {vocabCount > 15 && <span className="text-3xl">🐡</span>}
                 </div>
-                <div className="text-muted-foreground flex items-center gap-2 leading-none">
-                  January - June 2024
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Quick Stats Card 1 */}
+          <Card className="bg-white shadow-lg transition-shadow duration-300 hover:shadow-xl">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-blue-700">
+                📈 This Month
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-4xl font-bold text-gray-900">30</div>
+              <p className="mt-2 text-sm text-gray-600">New words learned</p>
+              <div className="mt-4 flex items-center gap-1 text-sm text-green-600">
+                <TrendingUp className="h-4 w-4" />
+                <span className="font-medium">+150%</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Quick Stats Card 2 */}
+          <Card className="bg-white shadow-lg transition-shadow duration-300 hover:shadow-xl">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-blue-700">
+                🎯 Streak
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-4xl font-bold text-gray-900">7</div>
+              <p className="mt-2 text-sm text-gray-600">Days in a row</p>
+              <div className="mt-4 flex gap-1">
+                {[...Array(7)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-2 w-2 rounded-full bg-green-500"
+                  ></div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Chart Card (spans 2 columns on lg) */}
+          <Card className="bg-white shadow-lg transition-shadow duration-300 hover:shadow-xl lg:col-span-2 lg:row-span-2">
+            <CardHeader>
+              <CardTitle className="text-blue-700">Monthly Progress</CardTitle>
+              <CardDescription>
+                Number of vocabs added each month
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer config={chartConfig} className="max-h-[300px]">
+                <AreaChart
+                  accessibilityLayer
+                  data={chartData}
+                  margin={{
+                    left: 12,
+                    right: 12,
+                  }}
+                >
+                  <CartesianGrid vertical={false} />
+                  <XAxis
+                    dataKey="month"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                  />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent indicator="line" />}
+                  />
+                  <Area
+                    dataKey="vocabs"
+                    type="natural"
+                    fill="hsl(217, 91%, 60%)"
+                    fillOpacity={0.4}
+                    stroke="hsl(217, 91%, 60%)"
+                  />
+                </AreaChart>
+              </ChartContainer>
+              <div className="mt-6 flex items-start gap-2 text-sm">
+                <div className="grid gap-2">
+                  <div className="flex items-center gap-2 leading-none font-medium">
+                    Trending up by 150% this month
+                    <TrendingUp className="h-4 w-4" />
+                  </div>
+                  <div className="text-muted-foreground flex items-center gap-2 leading-none">
+                    January - June 2024
+                  </div>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
 
-      {/* Right Section - Lake Animation */}
-      <div className="flex w-1/2 items-center justify-center p-8">
-        <div className="flex flex-col items-center">
-          {/* Vocab Count Display */}
-          <div className="text-center">
-            <div className="mb-2 text-5xl font-bold text-blue-800">
-              {vocabCount}
-            </div>
-            <div className="text-xl font-medium text-blue-700">
-              Vocabs in your lake
-            </div>
-          </div>
+          {/* Latest Vocabs Card (spans 2 columns on lg) */}
+          <Card className="bg-white shadow-lg transition-shadow duration-300 hover:shadow-xl lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="text-blue-700">Latest Vocabs</CardTitle>
+              <CardDescription>
+                Your 5 most recently added vocabulary words
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {latestVocabs.length > 0 ? (
+                <div className="space-y-3">
+                  {latestVocabs.map((vocab, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 p-4 transition-all duration-200 hover:shadow-md"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500 font-bold text-white">
+                          {index + 1}
+                        </div>
+                        <span className="font-semibold text-blue-900">
+                          {vocab.term}
+                        </span>
+                      </div>
+                      <span className="text-sm text-blue-600">
+                        {vocab.created_at}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-8 text-center">
+                  <div className="mb-3 text-5xl">📚</div>
+                  <p className="text-gray-500">No vocabulary words yet.</p>
+                  <p className="mt-1 text-sm text-gray-400">
+                    Start searching for words to see them here!
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Quick Action Card */}
+          <Card className="bg-gradient-to-br from-purple-500 to-pink-600 text-white shadow-lg transition-shadow duration-300 hover:shadow-xl">
+            <CardHeader>
+              <CardTitle className="text-white">🚀 Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <button className="w-full rounded-lg bg-white/20 px-4 py-2 text-left font-medium backdrop-blur-sm transition-all hover:bg-white/30">
+                  Learn New Words
+                </button>
+                <button className="w-full rounded-lg bg-white/20 px-4 py-2 text-left font-medium backdrop-blur-sm transition-all hover:bg-white/30">
+                  Review Practice
+                </button>
+                <button className="w-full rounded-lg bg-white/20 px-4 py-2 text-left font-medium backdrop-blur-sm transition-all hover:bg-white/30">
+                  View All Vocabs
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Achievement/Motivation Card */}
+          <Card className="bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-lg transition-shadow duration-300 hover:shadow-xl">
+            <CardHeader>
+              <CardTitle className="text-white">🏆 Achievement</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center">
+                <div className="mb-3 text-5xl">🎉</div>
+                <p className="text-lg font-semibold">Keep it up!</p>
+                <p className="mt-2 text-sm text-white/80">
+                  You&apos;re doing great this week
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </section>
