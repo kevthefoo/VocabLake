@@ -54,8 +54,7 @@ const ImageGallery = ({ searchTerm, vocabData }) => {
             Visual Examples
           </h3>
           <p className="max-w-2xl text-gray-600">
-            Images related to &quot;{searchTerm}&quot; to help visualize the
-            concept
+            Images related to &quot;{searchTerm}&quot; from Google Search
           </p>
         </div>
 
