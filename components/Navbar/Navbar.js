@@ -23,7 +23,7 @@ const Navbar = () => {
       <nav>
         <ul className="flex gap-4">
           <li>
-            <Link href="/">Search</Link>
+            <Link href="/" scroll={false}>Search</Link>
           </li>
           <li>
             <Link href="/dashboard">Dashboard</Link>

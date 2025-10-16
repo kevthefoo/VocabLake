@@ -53,7 +53,10 @@ const Hero = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ vocabulary: validation.cleanedInput || query }),
+        body: JSON.stringify({
+          userId: user.id,
+          vocabulary: validation.cleanedInput || query,
+        }),
       });
 
       if (!response.ok) {
