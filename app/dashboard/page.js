@@ -76,7 +76,7 @@ const Page = () => {
           monthlyGrowthData,
           streakData,
         ] = await Promise.all([
-          countVocab(),
+          countVocab(user.id),
           getLatestVocabs(5),
           getMonthlyStats(6),
           getMonthlyGrowth(),
