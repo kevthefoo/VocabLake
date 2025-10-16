@@ -17,6 +17,7 @@ import {
   generateEducationalOrganizationSchema,
 } from "@/lib/seo";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
