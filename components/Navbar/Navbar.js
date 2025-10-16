@@ -7,9 +7,9 @@ import {
   UserButton,
   useUser,
 } from "@clerk/nextjs";
-
+import logo from "@/assets/logo.jpg";
 import Link from "next/link";
-
+import Image from "next/image";
 const Navbar = () => {
   const { user, isLoaded } = useUser();
 
@@ -18,12 +18,20 @@ const Navbar = () => {
   }
 
   return (
-    <div className="flex h-16 w-full items-center justify-around border-b-2 border-black">
-      <div>Logo</div>
+    <div className="flex h-16 w-full items-center justify-around border-b-2 border-black select-none">
+      <Image
+        src={logo}
+        height={50}
+        width={50}
+        alt="logo"
+        className="rounded-full"
+      />
       <nav>
         <ul className="flex gap-4">
           <li>
-            <Link href="/" scroll={false}>Search</Link>
+            <Link href="/" scroll={false}>
+              Search
+            </Link>
           </li>
           <li>
             <Link href="/dashboard">Dashboard</Link>

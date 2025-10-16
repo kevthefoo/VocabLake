@@ -6,6 +6,7 @@ import {
   UserButton,
   isLoaded,
 } from "@clerk/nextjs";
+import "./globals.css";
 import { neobrutalism } from "@clerk/themes";
 import Navbar from "@/components/Navbar/Navbar";
 import { Toaster } from "sonner";
@@ -15,7 +16,6 @@ import {
   generateWebsiteSchema,
   generateEducationalOrganizationSchema,
 } from "@/lib/seo";
-import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
