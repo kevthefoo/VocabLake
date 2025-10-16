@@ -7,7 +7,7 @@ import {
   UserButton,
   useUser,
 } from "@clerk/nextjs";
-import logo from "@/assets/logo.jpg";
+import logo from "@/assets/logo.png";
 import Link from "next/link";
 import Image from "next/image";
 const Navbar = () => {
