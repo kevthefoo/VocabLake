@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Download, FileText, Code } from "lucide-react";
 
-const ExportModal = ({ isOpen, onClose, vocabCount }) => {
+const ExportModal = ({ isOpen, onClose, vocabCount, user_id }) => {
   const [isExporting, setIsExporting] = useState(false);
   const [selectedFormat, setSelectedFormat] = useState("csv");
 
@@ -23,7 +23,7 @@ const ExportModal = ({ isOpen, onClose, vocabCount }) => {
     toast.loading(`Preparing your ${format.toUpperCase()} export...`);
 
     try {
-      const result = await exportAllVocabs(format);
+      const result = await exportAllVocabs(user_id, format);
       toast.dismiss();
       toast.success(`Successfully exported ${result.count} vocabulary words!`, {
         description: `Downloaded as ${result.format.toUpperCase()} file to your computer.`,
@@ -63,6 +63,7 @@ const ExportModal = ({ isOpen, onClose, vocabCount }) => {
               disabled={isExporting}
               className="flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-gray-200 bg-white p-4 transition-all hover:border-blue-500 hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
+
               <FileText className="h-8 w-8 text-green-600" />
               <div className="text-center">
                 <div className="font-semibold text-gray-900">CSV</div>

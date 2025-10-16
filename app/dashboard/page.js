@@ -407,6 +407,7 @@ const Page = () => {
           isOpen={showExportModal}
           onClose={() => setShowExportModal(false)}
           vocabCount={vocabCount}
+          user_id = {user.id}
         />
       </section>
     </>
