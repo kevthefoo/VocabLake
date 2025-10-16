@@ -48,7 +48,6 @@ const Page = () => {
   const [isExporting, setIsExporting] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
 
-  const user_id = user.id
   const chartConfig = {
     vocabs: {
       label: "Vocabs Added",
@@ -69,6 +68,7 @@ const Page = () => {
       }
 
       try {
+        const user_id = user.id;
         // Fetch all dashboard data in parallel
         const [
           count,
