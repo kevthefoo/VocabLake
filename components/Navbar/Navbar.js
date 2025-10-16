@@ -18,7 +18,7 @@ const Navbar = () => {
   }
 
   return (
-    <div className="flex h-16 w-full items-center justify-around border-b-2 border-black select-none">
+    <div className="relative z-10 flex h-16 w-full items-center justify-around bg-white shadow-lg shadow-black/20 select-none">
       <Image
         src={logo}
         height={50}
