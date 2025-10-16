@@ -48,6 +48,7 @@ const Page = () => {
   const [isExporting, setIsExporting] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
 
+  const user_id = user.id
   const chartConfig = {
     vocabs: {
       label: "Vocabs Added",
@@ -76,11 +77,11 @@ const Page = () => {
           monthlyGrowthData,
           streakData,
         ] = await Promise.all([
-          countVocab(user.id),
-          getLatestVocabs(5),
-          getMonthlyStats(6),
-          getMonthlyGrowth(),
-          getLearningStreak(),
+          countVocab(user_id),
+          getLatestVocabs(user_id, 5),
+          getMonthlyStats(user_id, 6),
+          getMonthlyGrowth(user_id),
+          getLearningStreak(user_id),
         ]);
 
         setVocabCount(count);
