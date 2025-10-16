@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from "react";
 import countVocab from "@/lib/countVocab";
+import getLatestVocabs from "@/lib/getLatestVocabs";
+import getMonthlyStats from "@/lib/getMonthlyStats";
+import { getMonthlyGrowth } from "@/lib/getMonthlyGrowth";
+import getLearningStreak from "@/lib/getLearningStreak";
 import {
   Card,
   CardContent,
@@ -19,22 +23,16 @@ import {
 } from "@/components/ui/chart";
 
 import { useUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 const Page = () => {
   const { user, isSignedIn, isLoaded } = useUser();
+  const router = useRouter();
   const [vocabCount, setVocabCount] = useState(null);
   const [latestVocabs, setLatestVocabs] = useState([]);
-
-  // Mock chart data
-  const chartData = [
-    { month: "Jan", vocabs: 12 },
-    { month: "Feb", vocabs: 19 },
-    { month: "Mar", vocabs: 15 },
-    { month: "Apr", vocabs: 25 },
-    { month: "May", vocabs: 22 },
-    { month: "Jun", vocabs: 30 },
-  ];
+  const [chartData, setChartData] = useState([]);
+  const [monthlyGrowth, setMonthlyGrowth] = useState({ thisMonth: 0, growthPercentage: 0, trend: 'stable' });
+  const [learningStreak, setLearningStreak] = useState({ streak: 0, streakDays: [] });
 
   const chartConfig = {
     vocabs: {
@@ -55,28 +53,51 @@ const Page = () => {
         redirect("/");
       }
 
-      const count = await countVocab();
-      setVocabCount(count);
+      try {
+        // Fetch all dashboard data in parallel
+        const [
+          count,
+          latestVocabsData,
+          monthlyStatsData,
+          monthlyGrowthData,
+          streakData
+        ] = await Promise.all([
+          countVocab(),
+          getLatestVocabs(5),
+          getMonthlyStats(6),
+          getMonthlyGrowth(),
+          getLearningStreak()
+        ]);
 
-      // Mock data for latest vocabs
-      setLatestVocabs([
-        { term: "Serendipity", created_at: "2024-09-24" },
-        { term: "Ephemeral", created_at: "2024-09-23" },
-        { term: "Ubiquitous", created_at: "2024-09-22" },
-        { term: "Quintessential", created_at: "2024-09-21" },
-        { term: "Mellifluous", created_at: "2024-09-20" },
-      ]);
+        setVocabCount(count);
+        setLatestVocabs(latestVocabsData);
+        setChartData(monthlyStatsData);
+        setMonthlyGrowth(monthlyGrowthData);
+        setLearningStreak(streakData);
+
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+        // Set fallback data to prevent crashes
+        setVocabCount(0);
+        setLatestVocabs([]);
+        setChartData([]);
+        setMonthlyGrowth({ thisMonth: 0, growthPercentage: 0, trend: 'stable' });
+        setLearningStreak({ streak: 0, streakDays: [] });
+      }
     };
     fetchData();
   }, [user, isSignedIn, isLoaded]);
 
-  if (vocabCount === null) {
+  if (vocabCount === null || chartData.length === 0) {
     return (
       <section className="flex h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="text-center">
           <div className="mx-auto mb-4 h-16 w-16 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
           <p className="text-lg font-medium text-blue-700">
             Loading your dashboard...
+          </p>
+          <p className="mt-2 text-sm text-blue-600">
+            Fetching your vocabulary statistics
           </p>
         </div>
       </section>
@@ -134,12 +155,19 @@ const Page = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold text-gray-900">30</div>
+              <div className="text-4xl font-bold text-gray-900">{monthlyGrowth.thisMonth}</div>
               <p className="mt-2 text-sm text-gray-600">New words learned</p>
-              <div className="mt-4 flex items-center gap-1 text-sm text-green-600">
-                <TrendingUp className="h-4 w-4" />
-                <span className="font-medium">+150%</span>
-              </div>
+              {monthlyGrowth.growthPercentage !== 0 && (
+                <div className={`mt-4 flex items-center gap-1 text-sm ${
+                  monthlyGrowth.trend === 'up' ? 'text-green-600' : 
+                  monthlyGrowth.trend === 'down' ? 'text-red-600' : 'text-gray-600'
+                }`}>
+                  <TrendingUp className={`h-4 w-4 ${monthlyGrowth.trend === 'down' ? 'rotate-180' : ''}`} />
+                  <span className="font-medium">
+                    {monthlyGrowth.growthPercentage > 0 ? '+' : ''}{monthlyGrowth.growthPercentage}%
+                  </span>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -151,13 +179,16 @@ const Page = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold text-gray-900">7</div>
+              <div className="text-4xl font-bold text-gray-900">{learningStreak.streak}</div>
               <p className="mt-2 text-sm text-gray-600">Days in a row</p>
               <div className="mt-4 flex gap-1">
-                {[...Array(7)].map((_, i) => (
+                {learningStreak.streakDays.map((day, i) => (
                   <div
                     key={i}
-                    className="h-2 w-2 rounded-full bg-green-500"
+                    className={`h-2 w-2 rounded-full ${
+                      day.hasActivity ? 'bg-green-500' : 'bg-gray-200'
+                    }`}
+                    title={`${day.date}: ${day.hasActivity ? 'Active' : 'No activity'}`}
                   ></div>
                 ))}
               </div>
@@ -246,11 +277,13 @@ const Page = () => {
               <div className="mt-6 flex items-start gap-2 text-sm">
                 <div className="grid gap-2">
                   <div className="flex items-center gap-2 leading-none font-medium">
-                    Trending up by 150% this month
-                    <TrendingUp className="h-4 w-4" />
+                    {monthlyGrowth.trend === 'up' && `Trending up by ${monthlyGrowth.growthPercentage}% this month`}
+                    {monthlyGrowth.trend === 'down' && `Down by ${Math.abs(monthlyGrowth.growthPercentage)}% this month`}
+                    {monthlyGrowth.trend === 'stable' && 'Steady progress this month'}
+                    <TrendingUp className={`h-4 w-4 ${monthlyGrowth.trend === 'down' ? 'rotate-180' : ''}`} />
                   </div>
                   <div className="text-muted-foreground flex items-center gap-2 leading-none">
-                    January - June 2024
+                    Last {chartData.length} months progress
                   </div>
                 </div>
               </div>
@@ -264,13 +297,22 @@ const Page = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <button className="w-full rounded-lg bg-white/20 px-4 py-2 text-left font-medium backdrop-blur-sm transition-all hover:bg-white/30">
+                <button 
+                  onClick={() => router.push('/')}
+                  className="w-full rounded-lg bg-white/20 px-4 py-2 text-left font-medium backdrop-blur-sm transition-all hover:bg-white/30"
+                >
                   Learn New Words
                 </button>
-                <button className="w-full rounded-lg bg-white/20 px-4 py-2 text-left font-medium backdrop-blur-sm transition-all hover:bg-white/30">
+                <button 
+                  onClick={() => router.push('/review')}
+                  className="w-full rounded-lg bg-white/20 px-4 py-2 text-left font-medium backdrop-blur-sm transition-all hover:bg-white/30"
+                >
                   Review Practice
                 </button>
-                <button className="w-full rounded-lg bg-white/20 px-4 py-2 text-left font-medium backdrop-blur-sm transition-all hover:bg-white/30">
+                <button 
+                  onClick={() => router.push('/vocabs')}
+                  className="w-full rounded-lg bg-white/20 px-4 py-2 text-left font-medium backdrop-blur-sm transition-all hover:bg-white/30"
+                >
                   View All Vocabs
                 </button>
               </div>
