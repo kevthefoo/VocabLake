@@ -1,11 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import countVocab from "@/lib/countVocab";
 import getLatestVocabs from "@/lib/getLatestVocabs";
 import getMonthlyStats from "@/lib/getMonthlyStats";
 import { getMonthlyGrowth } from "@/lib/getMonthlyGrowth";
 import getLearningStreak from "@/lib/getLearningStreak";
+import { exportAllVocabs } from "@/lib/exportVocabs";
 import {
   Card,
   CardContent,
@@ -24,6 +26,8 @@ import {
 
 import { useUser } from "@clerk/nextjs";
 import { redirect, useRouter } from "next/navigation";
+import { toast } from "sonner";
+import ExportModal from "@/components/ExportModal/ExportModal";
 
 const Page = () => {
   const { user, isSignedIn, isLoaded } = useUser();
@@ -31,8 +35,17 @@ const Page = () => {
   const [vocabCount, setVocabCount] = useState(null);
   const [latestVocabs, setLatestVocabs] = useState([]);
   const [chartData, setChartData] = useState([]);
-  const [monthlyGrowth, setMonthlyGrowth] = useState({ thisMonth: 0, growthPercentage: 0, trend: 'stable' });
-  const [learningStreak, setLearningStreak] = useState({ streak: 0, streakDays: [] });
+  const [monthlyGrowth, setMonthlyGrowth] = useState({
+    thisMonth: 0,
+    growthPercentage: 0,
+    trend: "stable",
+  });
+  const [learningStreak, setLearningStreak] = useState({
+    streak: 0,
+    streakDays: [],
+  });
+  const [isExporting, setIsExporting] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
 
   const chartConfig = {
     vocabs: {
@@ -60,13 +73,13 @@ const Page = () => {
           latestVocabsData,
           monthlyStatsData,
           monthlyGrowthData,
-          streakData
+          streakData,
         ] = await Promise.all([
           countVocab(),
           getLatestVocabs(5),
           getMonthlyStats(6),
           getMonthlyGrowth(),
-          getLearningStreak()
+          getLearningStreak(),
         ]);
 
         setVocabCount(count);
@@ -74,19 +87,33 @@ const Page = () => {
         setChartData(monthlyStatsData);
         setMonthlyGrowth(monthlyGrowthData);
         setLearningStreak(streakData);
-
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
         // Set fallback data to prevent crashes
         setVocabCount(0);
         setLatestVocabs([]);
         setChartData([]);
-        setMonthlyGrowth({ thisMonth: 0, growthPercentage: 0, trend: 'stable' });
+        setMonthlyGrowth({
+          thisMonth: 0,
+          growthPercentage: 0,
+          trend: "stable",
+        });
         setLearningStreak({ streak: 0, streakDays: [] });
       }
     };
     fetchData();
   }, [user, isSignedIn, isLoaded]);
+
+  const handleExportVocabs = () => {
+    if (vocabCount === 0) {
+      toast.error("No vocabulary to export", {
+        description: "Add some vocabulary words first!",
+      });
+      return;
+    }
+
+    setShowExportModal(true);
+  };
 
   if (vocabCount === null || chartData.length === 0) {
     return (
@@ -155,16 +182,26 @@ const Page = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold text-gray-900">{monthlyGrowth.thisMonth}</div>
+              <div className="text-4xl font-bold text-gray-900">
+                {monthlyGrowth.thisMonth}
+              </div>
               <p className="mt-2 text-sm text-gray-600">New words learned</p>
               {monthlyGrowth.growthPercentage !== 0 && (
-                <div className={`mt-4 flex items-center gap-1 text-sm ${
-                  monthlyGrowth.trend === 'up' ? 'text-green-600' : 
-                  monthlyGrowth.trend === 'down' ? 'text-red-600' : 'text-gray-600'
-                }`}>
-                  <TrendingUp className={`h-4 w-4 ${monthlyGrowth.trend === 'down' ? 'rotate-180' : ''}`} />
+                <div
+                  className={`mt-4 flex items-center gap-1 text-sm ${
+                    monthlyGrowth.trend === "up"
+                      ? "text-green-600"
+                      : monthlyGrowth.trend === "down"
+                        ? "text-red-600"
+                        : "text-gray-600"
+                  }`}
+                >
+                  <TrendingUp
+                    className={`h-4 w-4 ${monthlyGrowth.trend === "down" ? "rotate-180" : ""}`}
+                  />
                   <span className="font-medium">
-                    {monthlyGrowth.growthPercentage > 0 ? '+' : ''}{monthlyGrowth.growthPercentage}%
+                    {monthlyGrowth.growthPercentage > 0 ? "+" : ""}
+                    {monthlyGrowth.growthPercentage}%
                   </span>
                 </div>
               )}
@@ -179,16 +216,18 @@ const Page = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold text-gray-900">{learningStreak.streak}</div>
+              <div className="text-4xl font-bold text-gray-900">
+                {learningStreak.streak}
+              </div>
               <p className="mt-2 text-sm text-gray-600">Days in a row</p>
               <div className="mt-4 flex gap-1">
                 {learningStreak.streakDays.map((day, i) => (
                   <div
                     key={i}
                     className={`h-2 w-2 rounded-full ${
-                      day.hasActivity ? 'bg-green-500' : 'bg-gray-200'
+                      day.hasActivity ? "bg-green-500" : "bg-gray-200"
                     }`}
-                    title={`${day.date}: ${day.hasActivity ? 'Active' : 'No activity'}`}
+                    title={`${day.date}: ${day.hasActivity ? "Active" : "No activity"}`}
                   ></div>
                 ))}
               </div>
@@ -277,10 +316,15 @@ const Page = () => {
               <div className="mt-6 flex items-start gap-2 text-sm">
                 <div className="grid gap-2">
                   <div className="flex items-center gap-2 leading-none font-medium">
-                    {monthlyGrowth.trend === 'up' && `Trending up by ${monthlyGrowth.growthPercentage}% this month`}
-                    {monthlyGrowth.trend === 'down' && `Down by ${Math.abs(monthlyGrowth.growthPercentage)}% this month`}
-                    {monthlyGrowth.trend === 'stable' && 'Steady progress this month'}
-                    <TrendingUp className={`h-4 w-4 ${monthlyGrowth.trend === 'down' ? 'rotate-180' : ''}`} />
+                    {monthlyGrowth.trend === "up" &&
+                      `Trending up by ${monthlyGrowth.growthPercentage}% this month`}
+                    {monthlyGrowth.trend === "down" &&
+                      `Down by ${Math.abs(monthlyGrowth.growthPercentage)}% this month`}
+                    {monthlyGrowth.trend === "stable" &&
+                      "Steady progress this month"}
+                    <TrendingUp
+                      className={`h-4 w-4 ${monthlyGrowth.trend === "down" ? "rotate-180" : ""}`}
+                    />
                   </div>
                   <div className="text-muted-foreground flex items-center gap-2 leading-none">
                     Last {chartData.length} months progress
@@ -296,24 +340,27 @@ const Page = () => {
               <CardTitle className="text-white">🚀 Quick Actions</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                <button 
-                  onClick={() => router.push('/')}
-                  className="w-full rounded-lg bg-white/20 px-4 py-2 text-left font-medium backdrop-blur-sm transition-all hover:bg-white/30"
+              <div className="flex flex-col gap-3">
+                <Link
+                  href="/"
+                  className="w-full cursor-pointer rounded-lg bg-white/20 px-4 py-2 text-left font-medium backdrop-blur-sm transition-all hover:bg-white/30"
                 >
                   Learn New Words
-                </button>
-                <button 
-                  onClick={() => router.push('/review')}
-                  className="w-full rounded-lg bg-white/20 px-4 py-2 text-left font-medium backdrop-blur-sm transition-all hover:bg-white/30"
+                </Link>
+
+                <Link
+                  href="/review"
+                  className="w-full cursor-pointer rounded-lg bg-white/20 px-4 py-2 text-left font-medium backdrop-blur-sm transition-all hover:bg-white/30"
                 >
-                  Review Practice
-                </button>
-                <button 
-                  onClick={() => router.push('/vocabs')}
-                  className="w-full rounded-lg bg-white/20 px-4 py-2 text-left font-medium backdrop-blur-sm transition-all hover:bg-white/30"
+                  Practice
+                </Link>
+
+                <button
+                  onClick={handleExportVocabs}
+                  disabled={vocabCount === 0}
+                  className="w-full cursor-pointer rounded-lg bg-white/20 px-4 py-2 text-left font-medium backdrop-blur-sm transition-all hover:bg-white/30 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  View All Vocabs
+                  Export All Vocabs {vocabCount > 0 ? `(${vocabCount})` : ""}
                 </button>
               </div>
             </CardContent>
@@ -336,6 +383,13 @@ const Page = () => {
           </Card>
         </div>
       </div>
+
+      {/* Export Modal */}
+      <ExportModal
+        isOpen={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        vocabCount={vocabCount}
+      />
     </section>
   );
 };
