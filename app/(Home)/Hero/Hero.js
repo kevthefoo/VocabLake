@@ -30,20 +30,20 @@ const Hero = () => {
     }
 
     // Validate input before processing
-    // const validation = validateVocabularyInput(query);
+    const validation = validateVocabularyInput(query);
 
-    // if (!validation.isValid) {
-    //   const errorMessage = validation.errors.join(". ");
-    //   toast.error(`Invalid input: ${errorMessage}`);
+    if (!validation.isValid) {
+      const errorMessage = validation.errors.join(". ");
+      toast.error(`Invalid input: ${errorMessage}`);
 
-    //   // Show suggestion if available
-    //   if (validation.suggestions.length > 0) {
-    //     setTimeout(() => {
-    //       toast.info(validation.suggestions[0]);
-    //     }, 1000);
-    //   }
-    //   return;
-    // }
+      // Show suggestion if available
+      if (validation.suggestions.length > 0) {
+        setTimeout(() => {
+          toast.info(validation.suggestions[0]);
+        }, 1000);
+      }
+      return;
+    }
 
     setIsLoading(true);
 
