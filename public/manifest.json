@@ -1,0 +1,54 @@
+{
+    "name": "VocabLake - Vocabulary Learning Platform",
+    "short_name": "VocabLake",
+    "description": "Discover, learn, and master new vocabulary with AI-powered definitions and personalized learning.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#3b82f6",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ],
+    "categories": [
+        "education",
+        "productivity"
+    ],
+    "screenshots": [
+        {
+            "src": "/screenshot-wide.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
+            "src": "/screenshot-narrow.png",
+            "sizes": "375x812",
+            "type": "image/png",
+            "form_factor": "narrow"
+        }
+    ]
+}

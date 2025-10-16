@@ -2,6 +2,30 @@ import { auth } from "@clerk/nextjs/server";
 
 import { PricingTable } from "@clerk/nextjs";
 import { neobrutalism } from "@clerk/themes";
+
+export const metadata = {
+  title: "Pricing Plans - Choose Your VocabLake Subscription",
+  description:
+    "Choose the perfect VocabLake plan for your vocabulary learning needs. Free tier with 10 searches per day or unlimited premium access with advanced features.",
+  keywords: [
+    "vocabulary subscription",
+    "pricing plans",
+    "vocabulary learning premium",
+    "upgrade vocabulary",
+    "unlimited vocabulary searches",
+  ],
+  openGraph: {
+    title: "VocabLake Pricing - Unlock Unlimited Vocabulary Learning",
+    description:
+      "Choose between free tier (10 searches/day) or premium unlimited access. Start your vocabulary learning journey today.",
+    images: ["/og-pricing.png"],
+  },
+  twitter: {
+    title: "VocabLake Pricing - Unlock Unlimited Vocabulary Learning",
+    description:
+      "Choose between free tier (10 searches/day) or premium unlimited access. Start learning today.",
+  },
+};
 const page = async () => {
   const { has } = await auth();
 
