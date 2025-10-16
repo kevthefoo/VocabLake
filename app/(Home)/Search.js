@@ -1,16 +1,19 @@
 "use client";
 
 import { useState } from "react";
+
 import { useUser, SignIn, SignInButton } from "@clerk/nextjs";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import VocabCard from "@/components/VocabCard/VocabCard";
 import { toast } from "sonner";
 
-import { validateVocabularyInput } from "@/lib/inputValidator";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+import VocabCard from "@/components/VocabCard/VocabCard";
 import ImageGallery from "@/components/ImageGallery/ImageGallery";
 
-const Hero = () => {
+import { validateVocabularyInput } from "@/lib/inputValidator";
+
+const Search = () => {
   const { user, isSignedIn, isLoaded } = useUser();
   const [query, setQuery] = useState("");
   const [vocabData, setVocabData] = useState(null);
@@ -267,4 +270,4 @@ const Hero = () => {
   );
 };
 
-export default Hero;
+export default Search;

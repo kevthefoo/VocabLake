@@ -1,4 +1,4 @@
-import Hero from "./Hero/Hero";
+import Search from "./Search";
 
 export const metadata = {
   title: "Learn New Vocabulary Words with AI-Powered Definitions",
@@ -26,7 +26,7 @@ export const metadata = {
 };
 
 const page = () => {
-  return <Hero />;
+  return <Search />;
 };
 
 export default page;
