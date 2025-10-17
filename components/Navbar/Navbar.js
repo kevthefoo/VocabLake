@@ -51,7 +51,7 @@ const Navbar = () => {
         <SignedIn>
           <UserButton
             userProfileMode="navigation"
-            userProfileUrl="/account"
+            // userProfileUrl="/account"
           ></UserButton>
         </SignedIn>
       </div>
