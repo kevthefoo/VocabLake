@@ -40,6 +40,7 @@ const Page = () => {
   const handlePreviousVocab = async () => {
     setCurrentIndex((prev) => (prev > 0 ? prev - 1 : prev));
   };
+
   const handleNextVocab = async () => {
     setCurrentIndex((prev) =>
       vocabData && prev < vocabData.length - 1 ? prev + 1 : prev,
@@ -82,7 +83,32 @@ const Page = () => {
 
           {/* Main Content Container */}
           <div className="mx-auto flex min-h-[60vh] max-w-4xl flex-col items-center justify-center">
-            {vocabData && vocabData[currentIndex] && (
+            {/* No vocabulary words available */}
+            {vocabData && vocabData.length === 0 && (
+              <div className="mx-auto max-w-2xl text-center">
+                <div className="rounded-2xl bg-white p-8 shadow-2xl md:p-12">
+                  <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-amber-100">
+                    <span className="text-3xl">📝</span>
+                  </div>
+                  <h2 className="mx-auto mb-4 max-w-lg text-2xl font-bold text-gray-900 md:text-3xl">
+                    No Vocabulary Words Yet
+                  </h2>
+                  <p className="mx-auto mb-6 max-w-md text-lg text-gray-600">
+                    You haven&apos;t added any vocabulary words to your
+                    collection yet. Start by searching and adding words to build
+                    your vocabulary!
+                  </p>
+                  <Button
+                    onClick={() => (window.location.href = "/")}
+                    className="mx-auto cursor-pointer rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-3 text-lg font-semibold text-white transition-all duration-200 hover:from-blue-700 hover:to-indigo-700"
+                  >
+                    Start Adding Words
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {vocabData && vocabData.length > 0 && vocabData[currentIndex] && (
               <div className="mx-auto flex w-full max-w-3xl items-center justify-center gap-4">
                 <Button
                   onClick={handlePreviousVocab}
