@@ -10,9 +10,9 @@ export async function POST(req) {
   const FEATURE = "generate-report";
   const FREE_LIMIT = 10;
   const { has } = await auth();
+  
 
   const hasStandardPlan = has({ plan: "std" });
-  console.log(hasStandardPlan);
   if (hasStandardPlan){
     console.log("User is a standard user")
   }else{
@@ -22,8 +22,10 @@ export async function POST(req) {
   const body = await req.json();
   const queryVocab = body.vocabulary;
   const userId = body.userId;
+  const admin_groups =  JSON.parse(process.env.ADMIN_ID_LIST || '[]');
 
-  if (!hasStandardPlan) {
+  console.log(admin_groups.includes(userId))
+  if (!hasStandardPlan && !(admin_groups.includes(userId))) {
     const { allowed, remaining } = await incrementDailyUsageDB(
       userId,
       FEATURE,
