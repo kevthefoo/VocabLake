@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
+export const metadata = {
+  title: "Not Found",
+  description: "The page you are looking for does not exist.",
+};
+
 export default function NotFound() {
   return (
     <section className="h-full bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-16">
