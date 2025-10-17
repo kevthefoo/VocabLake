@@ -32,7 +32,7 @@ const Page = () => {
   ];
 
   const handleStart = async () => {
-    const data = await randomQuery(selectedCount); // Pass the selected count
+    const data = await randomQuery(user.id, selectedCount); // Pass the selected count
     setVocabData(data);
     setCurrentIndex(0);
   };
